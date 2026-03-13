@@ -16,6 +16,7 @@ class BrowserAutomation:
         slow_mo: int = 100,
         screenshot_path: str = "logs/screenshots",
         user_data_dir: Optional[str] = None,
+        executable_path: Optional[str] = None,
     ):
         """
         初始化浏览器自动化
@@ -25,11 +26,13 @@ class BrowserAutomation:
             slow_mo: 操作延迟(ms)
             screenshot_path: 截图保存路径
             user_data_dir: 浏览器用户数据目录(保持登录状态)
+            executable_path: 自定义浏览器路径 (如 C:/Program Files/Google/Chrome/Application/chrome.exe)
         """
         self.headless = headless
         self.slow_mo = slow_mo
         self.screenshot_path = Path(screenshot_path)
         self.user_data_dir = user_data_dir
+        self.executable_path = executable_path
         
         self._playwright = None
         self._browser: Optional[Browser] = None
@@ -48,23 +51,32 @@ class BrowserAutomation:
         # 选择浏览器类型
         browser_launcher = getattr(self._playwright, browser_type)
         
+        # 构建启动参数
+        launch_args = ["--start-maximized"]
+        
         # 启动浏览器
         if self.user_data_dir:
             # 使用持久化上下文，保持登录状态
-            self._context = browser_launcher.launch_persistent_context(
-                user_data_dir=self.user_data_dir,
-                headless=self.headless,
-                slow_mo=self.slow_mo,
-                args=["--start-maximized"],
-                viewport={"width": 1920, "height": 1080},
-            )
+            kwargs = {
+                "user_data_dir": self.user_data_dir,
+                "headless": self.headless,
+                "slow_mo": self.slow_mo,
+                "args": launch_args,
+                "viewport": {"width": 1920, "height": 1080},
+            }
+            if self.executable_path:
+                kwargs["executable_path"] = self.executable_path
+            self._context = browser_launcher.launch_persistent_context(**kwargs)
             self._page = self._context.new_page()
         else:
-            self._browser = browser_launcher.launch(
-                headless=self.headless,
-                slow_mo=self.slow_mo,
-                args=["--start-maximized"],
-            )
+            kwargs = {
+                "headless": self.headless,
+                "slow_mo": self.slow_mo,
+                "args": launch_args,
+            }
+            if self.executable_path:
+                kwargs["executable_path"] = self.executable_path
+            self._browser = browser_launcher.launch(**kwargs)
             self._context = self._browser.new_context(
                 viewport={"width": 1920, "height": 1080}
             )

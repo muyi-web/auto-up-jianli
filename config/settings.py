@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     # 浏览器配置
     headless: bool = False  # 是否无头模式
     slow_mo: int = 100  # 操作延迟(ms)
+    browser_path: str = "C:/Program Files/Google/Chrome/Application/chrome.exe"  # 自定义浏览器路径 (留空使用 Playwright 自带)
     
     # 截图保存路径
     screenshot_path: str = "logs/screenshots"

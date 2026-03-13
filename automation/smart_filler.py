@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Tuple
 from loguru import logger
 from playwright.sync_api import Page, Locator
 
-from parser.models import ResumeInfo
+from resume_parser.models import ResumeInfo
 
 
 class SmartFormFiller:
