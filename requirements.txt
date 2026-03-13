@@ -1,0 +1,20 @@
+# 简历解析
+pdfplumber>=0.10.0
+PyPDF2>=3.0.0
+python-docx>=1.1.0
+openpyxl>=3.1.0
+
+# 浏览器自动化
+playwright>=1.40.0
+
+# 文本处理与NLP
+jieba>=0.42.1
+pyparsing>=3.1.0
+
+# 配置管理
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+
+# 工具库
+loguru>=0.7.0
+rich>=13.7.0
